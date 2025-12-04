@@ -69,38 +69,51 @@ const Footer = () => {
             <h3 className="font-semibold text-base mb-4">Connect</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
-                  Twitter
+                <a
+                  href="https://x.com"
+                  className="text-gray-600 hover:text-primary text-sm"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  X (Twitter)
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
+                <a
+                  href="https://www.linkedin.com"
+                  className="text-gray-600 hover:text-primary text-sm"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary text-sm">
+                <a
+                  href="mailto:hello@equitablejourneys.com"
+                  className="text-gray-600 hover:text-primary text-sm"
+                >
                   Email Newsletter
                 </a>
               </li>
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-600">
             © {new Date().getFullYear()} Equitable Journeys. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-gray-600 hover:text-primary text-sm">
+            <Link to="/privacy" className="text-gray-600 hover:text-primary text-sm">
               Privacy Policy
-            </a>
-            <a href="#" className="text-gray-600 hover:text-primary text-sm">
+            </Link>
+            <Link to="/terms" className="text-gray-600 hover:text-primary text-sm">
               Terms of Service
-            </a>
-            <a href="#" className="text-gray-600 hover:text-primary text-sm">
+            </Link>
+            <Link to="/cookies" className="text-gray-600 hover:text-primary text-sm">
               Cookie Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>
