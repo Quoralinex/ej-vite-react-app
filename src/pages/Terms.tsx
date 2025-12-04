@@ -32,15 +32,19 @@ const Terms = () => {
             <div className="space-y-3">
               <h2 className="text-xl font-semibold">Liability</h2>
               <p className="text-gray-700">
-                Equitable Journeys is not responsible for decisions you make based on our suggestions. The service is provided on
-                an "as-is" basis without warranties.
+                Equitable Journeys is not responsible for decisions you make based on our suggestions. The service is
+                provided on an "as-is" basis without warranties.
               </p>
             </div>
 
             <div className="space-y-3">
               <h2 className="text-xl font-semibold">Contact</h2>
               <p className="text-gray-700">
-                If you have questions about these terms, reach out at <a className="text-primary font-medium" href="mailto:support@equitablejourneys.com">support@equitablejourneys.com</a>.
+                If you have questions about these terms, reach out at{' '}
+                <a className="text-primary font-medium" href="mailto:support@equitablejourneys.com">
+                  support@equitablejourneys.com
+                </a>
+                .
               </p>
             </div>
           </div>
