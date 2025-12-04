@@ -13,6 +13,9 @@ import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import CareerCompassFrame from "./pages/CareerCompassFrame";
 import EinsteinLearningFrame from "./pages/EinsteinLearningFrame";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,9 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/cookies" element={<Cookies />} />
           <Route path="/tools/career-compass" element={<CareerCompassFrame />} />
           <Route path="/tools/einstein-learning" element={<EinsteinLearningFrame />} />
           <Route path="*" element={<NotFound />} />
