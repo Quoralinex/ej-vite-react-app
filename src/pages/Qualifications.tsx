@@ -1,13 +1,9 @@
-
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import MainLayout from '@/layouts/MainLayout';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SearchIcon, BookOpen } from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
-// Define qualification data types
 interface QualificationType {
   name: string;
   description?: string;
@@ -20,7 +16,6 @@ interface QualificationLevel {
   qualifications: QualificationType[];
 }
 
-// Define the qualification data based on the provided UK qualification levels
 const qualificationData: QualificationLevel[] = [
   {
     level: "entry",
@@ -171,37 +166,35 @@ const qualificationData: QualificationLevel[] = [
 
 const Qualifications = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
 
-  // Filter qualifications based on search term
-  const filteredData = qualificationData
-    .map(level => ({
-      ...level,
-      qualifications: level.qualifications.filter(qual => 
-        qual.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }))
-    .filter(level => activeTab === 'all' || level.level === activeTab)
-    .filter(level => level.qualifications.length > 0);
+  const filteredData = useMemo(() => {
+    return qualificationData
+      .map(level => ({
+        ...level,
+        qualifications: level.qualifications.filter(qual =>
+          qual.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      }))
+      .filter(level => level.qualifications.length > 0);
+  }, [searchTerm]);
 
   return (
     <MainLayout>
-      {/* Hero Section */}
       <section className="bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+        <div className="container px-4">
+          <div className="max-w-3xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl font-bold mb-4">UK Qualification Levels</h1>
             <p className="text-lg text-gray-600 mb-8">
               Explore the different qualification levels in England, Wales, and Northern Ireland and discover what they mean for your educational journey.
             </p>
-            <div className="relative max-w-md mx-auto">
+            <div className="relative max-w-xl mx-auto">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <SearchIcon className="h-5 w-5 text-gray-400" />
               </div>
               <Input
                 type="text"
                 placeholder="Search qualifications..."
-                className="pl-10 pr-4 py-2 w-full"
+                className="pl-10 pr-4 py-3 w-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -210,119 +203,29 @@ const Qualifications = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="py-12">
-        <div className="container mx-auto px-4">
-          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-8">
-              <TabsList className="inline-flex">
-                <TabsTrigger value="all">All Levels</TabsTrigger>
-                <TabsTrigger value="entry">Entry</TabsTrigger>
-                <TabsTrigger value="1-3">Levels 1-3</TabsTrigger>
-                <TabsTrigger value="4-6">Levels 4-6</TabsTrigger>
-                <TabsTrigger value="7-8">Levels 7-8</TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="all">
-              <div className="space-y-12">
-                {filteredData.map((level) => (
-                  <QualificationLevelSection key={level.level} level={level} />
+        <div className="container px-4 space-y-12">
+          {filteredData.map((level) => (
+            <div key={level.level} className="space-y-4">
+              <div>
+                <h2 className="text-2xl font-bold">{level.title}</h2>
+                <p className="text-gray-600 max-w-3xl">{level.description}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {level.qualifications.map((qual, index) => (
+                  <Card key={index} className="h-full shadow-sm">
+                    <CardContent className="p-4">
+                      <div className="font-medium text-gray-900">{qual.name}</div>
+                      {qual.description && <p className="text-sm text-gray-500 mt-1">{qual.description}</p>}
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            </TabsContent>
-
-            <TabsContent value="entry">
-              <div className="space-y-12">
-                {filteredData
-                  .filter(level => level.level === "entry")
-                  .map((level) => (
-                    <QualificationLevelSection key={level.level} level={level} />
-                  ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="1-3">
-              <div className="space-y-12">
-                {filteredData
-                  .filter(level => ["1", "2", "3"].includes(level.level))
-                  .map((level) => (
-                    <QualificationLevelSection key={level.level} level={level} />
-                  ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="4-6">
-              <div className="space-y-12">
-                {filteredData
-                  .filter(level => ["4", "5", "6"].includes(level.level))
-                  .map((level) => (
-                    <QualificationLevelSection key={level.level} level={level} />
-                  ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="7-8">
-              <div className="space-y-12">
-                {filteredData
-                  .filter(level => ["7", "8"].includes(level.level))
-                  .map((level) => (
-                    <QualificationLevelSection key={level.level} level={level} />
-                  ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 bg-primary/5">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <Card>
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="bg-primary/10 rounded-full p-5">
-                  <BookOpen className="h-10 w-10 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-2">Need help finding the right qualification?</h3>
-                  <p className="text-gray-600 mb-0">
-                    Our career pathway tool can help you identify suitable qualifications based on your goals and current level.
-                  </p>
-                </div>
-                <Button asChild size="lg">
-                  <a href="/pathways">Try Pathway Tool</a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          ))}
         </div>
       </section>
     </MainLayout>
-  );
-};
-
-// Component for displaying a qualification level section
-interface QualificationLevelSectionProps {
-  level: QualificationLevel;
-}
-
-const QualificationLevelSection = ({ level }: QualificationLevelSectionProps) => {
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">{level.title}</h2>
-      <p className="text-gray-600 mb-6 max-w-3xl">{level.description}</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {level.qualifications.map((qual, index) => (
-          <Card key={index} className="h-full">
-            <CardContent className="p-4">
-              <div className="font-medium">{qual.name}</div>
-              {qual.description && <p className="text-sm text-gray-500 mt-1">{qual.description}</p>}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
   );
 };
 
