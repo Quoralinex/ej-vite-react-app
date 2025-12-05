@@ -1,21 +1,21 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster.tsx";
+import { Toaster as Sonner } from "@/components/ui/sonner.tsx";
+import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Qualifications from "./pages/Qualifications";
-import Pathways from "./pages/Pathways";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Chat from "./pages/Chat";
-import NotFound from "./pages/NotFound";
-import CareerCompassFrame from "./pages/CareerCompassFrame";
-import EinsteinLearningFrame from "./pages/EinsteinLearningFrame";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Cookies from "./pages/Cookies";
+import Index from "./pages/Index.tsx";
+import Qualifications from "./pages/Qualifications.tsx";
+import Pathways from "./pages/Pathways.tsx";
+import About from "./pages/About.tsx";
+import Contact from "./pages/Contact.tsx";
+import Chat from "./pages/Chat.tsx";
+import NotFound from "./pages/NotFound.tsx";
+import CareerCompassFrame from "./pages/CareerCompassFrame.tsx";
+import EinsteinLearningFrame from "./pages/EinsteinLearningFrame.tsx";
+import Privacy from "./pages/Privacy.tsx";
+import Terms from "./pages/Terms.tsx";
+import Cookies from "./pages/Cookies.tsx";
 
 const queryClient = new QueryClient();
 
