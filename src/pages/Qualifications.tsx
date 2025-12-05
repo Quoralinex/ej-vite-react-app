@@ -2,9 +2,9 @@
 import { useState } from 'react';
 import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SearchIcon, Filter, BookOpen } from 'lucide-react';
+import { SearchIcon, BookOpen } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 // Define qualification data types
