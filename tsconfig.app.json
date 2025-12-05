@@ -14,20 +14,9 @@
                 "moduleDetection": "force",
                 "noEmit": true,
                 "jsx": "react-jsx",
-                "baseUrl": ".",
+                "baseUrl": "./src",
                 "paths": {
-                        "@/*": ["src/*"],
-                        "@tanstack/react-query": ["src/lib/react-query.tsx"],
-                        "react-router-dom": ["src/lib/react-router-dom.tsx"],
-                        "lucide-react": ["src/lib/lucide-react.tsx"],
-                        "class-variance-authority": ["src/lib/class-variance-authority.ts"],
-                        "@radix-ui/react-*": ["src/lib/radix-stub.tsx"],
-                        "react-hook-form": ["src/lib/react-hook-form.ts"],
-                        "input-otp": ["src/lib/input-otp.tsx"],
-                        "next-themes": ["src/lib/next-themes.tsx"],
-                        "sonner": ["src/lib/sonner.tsx"],
-                        "clsx": ["src/lib/clsx.ts"],
-                        "tailwind-merge": ["src/lib/tailwind-merge.ts"]
+                        "@/*": ["./*"]
                 },
 
                 /* Linting */

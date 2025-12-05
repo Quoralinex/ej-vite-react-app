@@ -92,7 +92,7 @@ const Index = () => {
                 <p className="text-gray-600 mb-4">
                   Get personalized guidance from our Career Compass Pro and Einstein Learning chatbots.
                 </p>
-                <Link to="/pathways" className="text-primary font-medium flex items-center hover:underline">
+                <Link to="/chat" className="text-primary font-medium flex items-center hover:underline">
                   Access AI Tools <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </CardContent>
