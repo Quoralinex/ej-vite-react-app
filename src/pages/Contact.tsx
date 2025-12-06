@@ -70,9 +70,13 @@ const Contact = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">Email Us</h3>
                 <p className="text-gray-600 mb-2">For general inquiries:</p>
-                <a href="mailto:info@equitablejourneys.org" className="text-primary hover:underline">
-                  info@equitablejourneys.org
-                </a>
+                <a
+  href="mailto:hello.equitable-journeys@quoralinex.com"
+  className="text-primary hover:underline"
+>
+  hello.equitable-journeys@quoralinex.com
+</a>
+
               </CardContent>
             </Card>
 
