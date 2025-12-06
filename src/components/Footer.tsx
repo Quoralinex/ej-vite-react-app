@@ -69,18 +69,9 @@ const Footer = () => {
             <h3 className="font-semibold text-base mb-4">Connect</h3>
             <ul className="space-y-2">
               <li>
+          
                 <a
-                  href="https://x.com"
-                  className="text-gray-600 hover:text-primary text-sm"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  X (Twitter)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.linkedin.com"
+                  href="https://www.linkedin.com/in/q1x/"
                   className="text-gray-600 hover:text-primary text-sm"
                   target="_blank"
                   rel="noreferrer"
@@ -90,7 +81,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="mailto:hello@equitablejourneys.com"
+                  href="mailto:hello@equitable-journeys@quoralinex.com"
                   className="text-gray-600 hover:text-primary text-sm"
                 >
                   Email Newsletter
