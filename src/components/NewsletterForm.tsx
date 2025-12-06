@@ -57,7 +57,7 @@ export function NewsletterForm() {
       <Input
         type="email"
         required
-        placeholder="your.email@example.com"
+        placeholder="hello.equitable-journeys@quoralinex.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
