@@ -13,7 +13,7 @@ const Privacy = () => {
               How we handle your data and keep your information safe when you use Equitable Journeys.
             </p>
             <p className="text-xs text-gray-400">
-              Last updated: [update this date when you change the policy]
+              Last updated: 06/12/2025
             </p>
           </div>
 
