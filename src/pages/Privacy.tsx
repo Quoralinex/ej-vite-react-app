@@ -43,9 +43,13 @@ const Privacy = () => {
               <h2 className="text-xl font-semibold">Contact us</h2>
               <p className="text-gray-700">
                 Questions about privacy? Reach us at{' '}
-                <a className="text-primary font-medium" href="mailto:privacy@equitablejourneys.com">
-                  privacy@equitablejourneys.com
-                </a>{' '}
+                <a
+  className="text-primary font-medium"
+  href="mailto:hello.equitable-journeys@quoralinex.com"
+>
+  hello.equitable-journeys@quoralinex.com
+</a>
+{' '}
                 and we will respond promptly.
               </p>
             </div>
