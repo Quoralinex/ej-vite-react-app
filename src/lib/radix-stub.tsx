@@ -1,11 +1,14 @@
-// @ts-nocheck
+/* eslint-disable react-refresh/only-export-components */
 import React, { ReactNode } from "react";
 
 type StubProps = { children?: ReactNode } & Record<string, unknown>;
 
 const createPrimitive = (displayName?: string) => {
-        const Component = React.forwardRef<HTMLElement, StubProps>(({ children, ...props }, ref) => (
-                <div ref={ref as React.Ref<HTMLDivElement>} {...props}>
+        const Component = React.forwardRef<HTMLDivElement, StubProps>((
+                { children, ...props },
+                ref,
+        ) => (
+                <div ref={ref} {...props}>
                         {children}
                 </div>
         ));
@@ -13,10 +16,12 @@ const createPrimitive = (displayName?: string) => {
         return Component;
 };
 
-const primitiveProxy: any = new Proxy(
+type PrimitiveComponent = ReturnType<typeof createPrimitive>;
+
+const primitiveProxy: Record<string, PrimitiveComponent> = new Proxy(
         {},
         {
-                get: (_target, prop) => createPrimitive(String(prop)),
+                get: (_target, prop: string | symbol) => createPrimitive(String(prop)),
         },
 );
 
