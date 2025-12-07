@@ -142,14 +142,9 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <img 
-                  src="https://images.unsplash.com/photo-1590650153855-d9e808231d41?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80" 
-                  alt="Student in classroom" 
-                  className="rounded-lg shadow-md h-auto max-w-full"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1529007196863-d07650a1f0ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80" 
-                  alt="Students collaborating" 
+                <img
+                  src="https://images.unsplash.com/photo-1590650153855-d9e808231d41?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=400&q=80"
+                  alt="Student in classroom"
                   className="rounded-lg shadow-md h-auto max-w-full"
                 />
               </div>
