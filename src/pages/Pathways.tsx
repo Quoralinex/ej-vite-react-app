@@ -527,33 +527,100 @@ const Pathways: React.FC = () => {
   };
 
   const handleDownloadResults = () => {
-    const data = {
-      currentCountry,
-      currentEqfLevel: getEqfLabel(currentEqfLevel),
-      ukApproxLevel: currentLevel || mapEqfToUkLevelCode(currentEqfLevel),
-      studyMode,
-      targetCountries: effectiveTargetCountries,
-      fundingProfile,
-      supportFlags,
-      accommodationPreferences,
-      costPreference,
-      interests,
-    };
+  const data = {
+    currentCountry,
+    currentEqfLevel: getEqfLabel(currentEqfLevel),
+    ukApproxLevel: currentLevel || mapEqfToUkLevelCode(currentEqfLevel),
+    studyMode,
+    targetCountries: effectiveTargetCountries,
+    fundingProfile,
+    supportFlags,
+    accommodationPreferences,
+    costPreference,
+    interests,
+  };
 
-    const blob = new Blob(
-      [
-        'Equitable Journeys – Pathway Summary\n\n',
-        JSON.stringify(data, null, 2),
-      ],
-      { type: 'text/plain;charset=utf-8' },
-    );
+  const lines: string[] = [];
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'equitable-journeys-pathway-summary.txt';
-    link.click();
-    URL.revokeObjectURL(url);
+  // Header
+  lines.push('Equitable Journeys – Pathway Summary');
+  lines.push('');
+
+  // JSON block
+  lines.push('Structured data (JSON)');
+  lines.push('');
+  lines.push(JSON.stringify(data, null, 2));
+  lines.push('');
+  lines.push('----------------------------------------');
+  lines.push('');
+
+  // Narrative summary
+  lines.push('Your Recommended Pathways');
+  lines.push(
+    `Based on your current level (${getEqfLabel(currentEqfLevel) || 'not specified yet'}) – roughly UK level ${
+      currentLevel || mapEqfToUkLevelCode(currentEqfLevel)
+    } – your study preferences and interests, here are some routes to explore.`
+  );
+  lines.push('');
+
+  // Country blocks (e.g. Luxembourg)
+  effectiveTargetCountries.forEach((country) => {
+    const config = countryConfigs[country];
+    if (!config) return;
+
+    lines.push(`Study pathways in ${country}`);
+    lines.push('');
+
+    lines.push('Qualification routes');
+    config.qualificationRoutes.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    lines.push('Accommodation options');
+    config.accommodation.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    lines.push('Work and study');
+    config.workAndStudy.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    lines.push('EU-level funding & opportunities');
+    config.euFunding.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    lines.push('National funding & grants');
+    config.nationalFunding.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    lines.push('Support for low-income learners');
+    config.lowIncomeSupport.forEach((item) => lines.push(`- ${item}`));
+    lines.push('');
+
+    if (costOfLivingHints[country]) {
+      lines.push(`Cost-of-living hint: ${costOfLivingHints[country]}`);
+      lines.push('');
+    }
+
+    if (config.notes) {
+      lines.push(`Note: ${config.notes}`);
+      lines.push('');
+    }
+
+    lines.push('----------------------------------------');
+    lines.push('');
+  });
+
+  const blob = new Blob([lines.join('\n')], {
+    type: 'text/plain;charset=utf-8',
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'equitable-journeys-pathway-summary.txt';
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
   };
 
   return (
