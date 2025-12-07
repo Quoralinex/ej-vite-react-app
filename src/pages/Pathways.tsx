@@ -1,63 +1,305 @@
-
-import { useState } from 'react';
+import React from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Lightbulb, ChevronRight, ChevronLeft, Route, GraduationCap } from 'lucide-react';
 
-type Step = 'intro' | 'current' | 'goals' | 'interests' | 'results';
+type Step =
+  | 'intro'
+  | 'currentCountry'
+  | 'currentLevel'
+  | 'mobility'
+  | 'studyMode'
+  | 'finance'
+  | 'interests'
+  | 'results';
 
-const Pathways = () => {
-  const [step, setStep] = useState<Step>('intro');
-  const [currentLevel, setCurrentLevel] = useState<string>('');
-  const [goal, setGoal] = useState<string>('');
-  const [interests, setInterests] = useState<string[]>([]);
-  const [progress, setProgress] = useState(0);
+const EU_COUNTRIES = [
+  'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia',
+  'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
+  'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg',
+  'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania',
+  'Slovakia', 'Slovenia', 'Spain', 'Sweden',
+];
 
-  const getStepNumber = (currentStep: Step): number => {
-    const stepOrder: Step[] = ['intro', 'current', 'goals', 'interests', 'results'];
-    return stepOrder.indexOf(currentStep);
-  };
+const EEA_EXTRA_COUNTRIES = ['Iceland', 'Liechtenstein', 'Norway'];
+const SINGLE_MARKET_EXTRA = ['Switzerland'];
+const OTHER_REGIONS = ['United Kingdom', 'Outside EU/EEA/Switzerland'];
 
-  const handleNextStep = () => {
-    const stepOrder: Step[] = ['intro', 'current', 'goals', 'interests', 'results'];
-    const currentIndex = stepOrder.indexOf(step);
-    const nextStep = stepOrder[currentIndex + 1];
-    setStep(nextStep);
-    setProgress((currentIndex + 1) * 25);
-  };
+const ALL_COUNTRIES = [
+  ...EU_COUNTRIES,
+  ...EEA_EXTRA_COUNTRIES,
+  ...SINGLE_MARKET_EXTRA,
+  ...OTHER_REGIONS,
+];
 
-  const handlePrevStep = () => {
-    const stepOrder: Step[] = ['intro', 'current', 'goals', 'interests', 'results'];
-    const currentIndex = stepOrder.indexOf(step);
-    const prevStep = stepOrder[currentIndex - 1];
-    setStep(prevStep);
-    setProgress(currentIndex * 25);
-  };
+const sectorOptions = [
+  'Healthcare',
+  'Education',
+  'Technology',
+  'Social Services',
+  'Environmental',
+  'Government',
+  'Business',
+  'Creative Arts',
+];
 
-  const handleInterestToggle = (interest: string) => {
-    if (interests.includes(interest)) {
-      setInterests(interests.filter(i => i !== interest));
-    } else {
-      setInterests([...interests, interest]);
-    }
-  };
+const activeSteps: Step[] = [
+  'currentCountry',
+  'currentLevel',
+  'mobility',
+  'studyMode',
+  'finance',
+  'interests',
+];
 
-  const sectorOptions = [
-    'Healthcare',
-    'Education',
-    'Technology',
-    'Social Services',
-    'Environmental',
-    'Government',
-    'Business',
-    'Creative Arts'
-  ];
+const stepOrder: Step[] = ['intro', ...activeSteps, 'results'];
+
+const mapEqfToUkLevelCode = (eqf: string): string => {
+  switch (eqf) {
+    case 'below2':
+      return 'none';
+    case 'eqf2-3':
+      return '1-2';
+    case 'eqf4':
+      return '3';
+    case 'eqf5':
+      return '4-5';
+    case 'eqf6':
+      return '6';
+    case 'eqf7':
+      return '7';
+    case 'eqf8':
+      return '8';
+    default:
+      return '';
+  }
+};
+
+const getEqfLabel = (eqf: string): string => {
+  switch (eqf) {
+    case 'below2':
+      return 'Below EQF 2 (no formal qualifications yet)';
+    case 'eqf2-3':
+      return 'EQF 2–3 (basic / lower secondary education)';
+    case 'eqf4':
+      return 'EQF 4 (upper secondary – general or vocational)';
+    case 'eqf5':
+      return 'EQF 5 (short-cycle higher / post-secondary vocational)';
+    case 'eqf6':
+      return 'EQF 6 (Bachelor level or equivalent)';
+    case 'eqf7':
+      return 'EQF 7 (Master level or equivalent)';
+    case 'eqf8':
+      return 'EQF 8 (Doctorate level)';
+    default:
+      return '';
+  }
+};
+
+const costOfLivingHints: Record<string, string> = {
+  Germany: 'Medium cost – many student cities with moderate rents.',
+  France: 'Medium to high cost – higher in Paris, more moderate in regional cities.',
+  Italy: 'Medium cost – northern cities higher, many affordable options in the centre and south.',
+  Netherlands: 'Medium to high cost – housing pressure in major cities.',
+  Spain: 'Medium cost – some affordable regional cities.',
+};
+
+const defaultTopCountries = ['Germany', 'France', 'Italy'];
+
+type CountryPathwayConfig = {
+  qualificationRoutes: string[];
+  accommodation: string[];
+  workAndStudy: string[];
+  euFunding: string[];
+  nationalFunding: string[];
+  lowIncomeSupport: string[];
+  notes?: string;
+};
+
+const countryConfigs: Record<string, CountryPathwayConfig> = {
+  Germany: {
+    qualificationRoutes: [
+      'Dual vocational training (Ausbildung) combining paid work in a company with 1–2 days per week in vocational school, usually 2–3.5 years (EQF 3–4).',
+      'Full-time vocational schools (Berufsfachschule) offering practical programmes in areas like healthcare, IT, engineering, hospitality and trades.',
+      'Upper-secondary pathways such as Fachoberschule or Gymnasium (where entry requirements are met) to progress toward higher education (EQF 4–5).',
+    ],
+    accommodation: [
+      'Student housing and residence halls managed by local Studentenwerk organisations in many cities.',
+      'Shared flats (Wohngemeinschaft / WG) which are a common, lower-cost option for students and trainees.',
+      'Company-supported accommodation for some dual-training programmes in smaller towns.',
+    ],
+    workAndStudy: [
+      'In dual Ausbildung you are on an employment contract with a training salary from day one.',
+      'Full-time students can usually take part-time jobs within visa or residence rules, especially in services, retail and hospitality.',
+      'Some universities of applied sciences (Hochschulen / Fachhochschulen) offer dual bachelor programmes that combine work and study.',
+    ],
+    euFunding: [
+      'Erasmus+ mobility grants for vocational education and training (VET) or higher education exchanges arranged through your home institution.',
+      'European Solidarity Corps opportunities for volunteering and solidarity projects with a monthly allowance.',
+    ],
+    nationalFunding: [
+      'BAföG (federal student support) for eligible learners in school, VET and higher education, based on residence status and financial need.',
+      'Deutschlandstipendium and other merit- and need-based scholarships offered by universities and foundations.',
+      'Regional or city-level grants for specific sectors or shortage professions in some Bundesländer.',
+    ],
+    lowIncomeSupport: [
+      'Higher BAföG entitlement for learners from low-income households, including possible housing and childcare supplements.',
+      'Reduced-price public transport and student discounts via university or vocational-school enrolment.',
+      'Rent support and social benefits for eligible residents through local Jobcenter or social-welfare offices.',
+    ],
+    notes:
+      'Germany is strong for paid apprenticeships and dual routes where you can earn while you learn and build recognised qualifications.',
+  },
+
+  France: {
+    qualificationRoutes: [
+      'CAP (Certificat d’aptitude professionnelle) for hands-on vocational skills in trades such as catering, mechanics, retail or care (EQF 3).',
+      'Bac professionnel (vocational baccalaureate) in a lycée professionnel, usually over 3 years, preparing for work or further study (EQF 4).',
+      'Technological and general baccalaureates (bac technologique / bac général) where access requirements are met, leading toward BTS, BUT and university.',
+    ],
+    accommodation: [
+      'CROUS-managed student residences in many towns and cities, with subsidised rents for eligible students.',
+      'Private student residences and shared flats, especially in larger cities.',
+      'Boarding options in some lycées professionnels for vocational learners who live far from the school.',
+    ],
+    workAndStudy: [
+      'Apprenticeship contracts (contrat d’apprentissage) that combine employment in a company with training in a CFA, with a monthly salary.',
+      'Students on school-based programmes can often take part-time work within legal limits, especially in services and hospitality.',
+      'Sandwich or alternating routes (formation en alternance) at BTS, BUT and some degree levels.',
+    ],
+    euFunding: [
+      'Erasmus+ grants for VET and higher-education mobility, usually arranged between your current and host institutions.',
+      'European Solidarity Corps projects that can be based in France with an allowance and accommodation support.',
+    ],
+    nationalFunding: [
+      'CROUS need-based grants (bourses sur critères sociaux) for students in recognised programmes.',
+      'Housing assistance (APL or other CAF benefits) to reduce rent costs, depending on income and status.',
+      'Support for apprentices including partial coverage of training costs and minimum apprenticeship wages.',
+    ],
+    lowIncomeSupport: [
+      'Higher-rate CROUS grants and emergency aid funds for students in financial difficulty.',
+      'Subsidised meals in university restaurants, with very low prices for scholarship holders.',
+      'Additional support for disabled learners via MDPH and university disability services.',
+    ],
+    notes:
+      'France combines strong social-support mechanisms (CROUS, housing aid) with a wide network of vocational and academic routes.',
+  },
+
+  Italy: {
+    qualificationRoutes: [
+      'Regional initial VET programmes leading to professional operator qualifications (EQF 3) in fields like mechanics, ICT, hospitality and personal services.',
+      'Four-year vocational and technical routes (istituti professionali / istituti tecnici) leading to diplomas at EQF 4.',
+      'Transition from upper-secondary vocational or technical diplomas into higher technical institutes (ITS Academy) or university, where requirements are met.',
+    ],
+    accommodation: [
+      'Public and private student residences, especially in larger university cities.',
+      'Shared apartments (stanze in affitto) which can be more affordable in medium-sized cities and southern regions.',
+      'Some regional or university-linked housing schemes tied to study grants.',
+    ],
+    workAndStudy: [
+      'Apprenticeships and work-based learning in many vocational tracks, combining classroom learning with company placements.',
+      'Part-time jobs in services, tourism and retail are common for students, depending on local labour markets.',
+      'ITS Academy programmes often integrate internships or periods of structured work experience.',
+    ],
+    euFunding: [
+      'Erasmus+ mobility for VET learners, ITS students and university students, often organised by the sending institution.',
+      'European Solidarity Corps opportunities that can add experience between or alongside studies.',
+    ],
+    nationalFunding: [
+      'Regional “diritto allo studio” grants that reduce or waive tuition fees and can contribute to housing and living costs.',
+      'Fee reductions and instalment plans at public universities for lower-income families.',
+      'Targeted scholarships for specific disciplines, such as engineering, teaching or healthcare.',
+    ],
+    lowIncomeSupport: [
+      'Income-based study grants which can include accommodation and meal subsidies.',
+      'Discounted student canteens and transport in many regions for eligible learners.',
+      'Additional support and targeted services for disabled students and those with specific learning needs.',
+    ],
+    notes:
+      'Italy offers relatively low public-university tuition by international standards, with regional grants playing an important role for low-income learners.',
+  },
+
+  Netherlands: {
+    qualificationRoutes: [
+      'Upper-secondary vocational programmes (mbo 2–4) in colleges, covering sectors like technology, business, care, logistics and hospitality (EQF 2–4).',
+      'Two learning pathways in mbo: school-based (bol) and work-based (bbl) with more time in paid employment.',
+      'Progression from mbo 4 into professional bachelor programmes (hbo) at universities of applied sciences if you meet entry criteria.',
+    ],
+    accommodation: [
+      'Student rooms in shared houses or small apartments (kamers), often arranged via local platforms or housing corporations.',
+      'Limited student housing complexes in some cities, with long waiting lists in high-pressure areas.',
+      'Commuting from nearby towns is common where rent is significantly cheaper.',
+    ],
+    workAndStudy: [
+      'In the bbl route you are employed by a company and spend most of the week working, with 1 day in school.',
+      'Full-time students can usually work part-time jobs in retail, hospitality, logistics and care sectors.',
+      'Many hbo programmes include mandatory internships (stages) linked directly to the curriculum.',
+    ],
+    euFunding: [
+      'Erasmus+ for mbo, hbo and university students, including traineeships abroad.',
+      'European Solidarity Corps projects within or outside the Netherlands.',
+    ],
+    nationalFunding: [
+      'Study finance (studiefinanciering) from DUO for eligible learners, which may include a basic grant, supplementary grant and student travel product.',
+      'Tuition-fee loans for higher education learners, repayable under income-linked rules.',
+      'Extra allowances for apprentices or learners in shortage occupations in some sectors.',
+    ],
+    lowIncomeSupport: [
+      'Supplementary grant from DUO for learners from low-income households, part of which can be converted to a gift when you graduate on time.',
+      'Local municipal schemes for youth in education, such as contributions towards books, laptops or transport.',
+      'Support services at mbo colleges, hbo institutions and universities for disabled students or those with care responsibilities.',
+    ],
+    notes:
+      'The Dutch system is strong on clear progression routes from mbo into hbo, and on structured internships that link study and work.',
+  },
+
+  Spain: {
+    qualificationRoutes: [
+      'Basic vocational training (Formación Profesional Básica) for learners who need an alternative to traditional lower-secondary routes (EQF 2).',
+      'Intermediate vocational programmes (CFGM, grado medio) leading to technician qualifications (EQF 3–4) in many professional fields.',
+      'Higher vocational programmes (CFGS, grado superior) at EQF 5 with strong links to specific occupations and pathways into university.',
+    ],
+    accommodation: [
+      'Student residences (colegios mayores and halls) linked to universities or private providers.',
+      'Shared apartments in cities with universities or strong vocational centres, often the most common option.',
+      'Cheaper options in smaller or inland cities compared with major coastal tourist areas.',
+    ],
+    workAndStudy: [
+      'Most vocational programmes integrate work-based learning periods (formación en centros de trabajo).',
+      'Part-time work alongside study is common in hospitality, retail and tourism, especially in larger cities.',
+      'Some dual-vocational training schemes (FP dual) combine longer placements with company contracts.',
+    ],
+    euFunding: [
+      'Erasmus+ for mobility periods during vocational or higher-education studies, organised by your school or university.',
+      'European Solidarity Corps placements, including youth projects within Spain.',
+    ],
+    nationalFunding: [
+      'State scholarships and grants (becas) from the Ministry of Education based on income, performance and programme level.',
+      'Regional grants that top up national becas or target specific sectors and regions.',
+      'Tuition fee reductions at public universities for certain categories of students.',
+    ],
+    lowIncomeSupport: [
+      'Higher-value becas for learners from low-income households, which can include components for accommodation, materials and transport.',
+      'Discounted meals, transport passes and local social-services support for eligible young people.',
+      'Special measures and flexible pathways for learners who are at risk of early school leaving.',
+    ],
+    notes:
+      'Spain offers a wide range of vocational options with built-in work experience and a strong national scholarship system for low-income learners.',
+  },
+};
 
   return (
     <MainLayout>
