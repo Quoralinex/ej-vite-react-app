@@ -20,18 +20,40 @@ type Step =
   | 'intro'
   | 'currentCountry'
   | 'currentLevel'
-  | 'mobility'
   | 'studyMode'
+  | 'mobility'
   | 'finance'
   | 'interests'
   | 'results';
 
 const EU_COUNTRIES = [
-  'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia',
-  'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
-  'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg',
-  'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania',
-  'Slovakia', 'Slovenia', 'Spain', 'Sweden',
+  'Austria',
+  'Belgium',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czechia',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Ireland',
+  'Italy',
+  'Latvia',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Netherlands',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
 ];
 
 const EEA_EXTRA_COUNTRIES = ['Iceland', 'Liechtenstein', 'Norway'];
@@ -59,8 +81,8 @@ const sectorOptions = [
 const activeSteps: Step[] = [
   'currentCountry',
   'currentLevel',
-  'mobility',
   'studyMode',
+  'mobility',
   'finance',
   'interests',
 ];
@@ -110,11 +132,35 @@ const getEqfLabel = (eqf: string): string => {
 };
 
 const costOfLivingHints: Record<string, string> = {
+  Austria: 'Medium to high cost – Vienna highest, smaller cities more moderate.',
+  Belgium: 'Medium to high cost – Brussels and Antwerp more expensive.',
+  Bulgaria: 'Lower cost – comparatively affordable housing and daily expenses.',
+  Croatia: 'Medium cost – coastal tourist areas higher than inland cities.',
+  Cyprus: 'Medium cost – housing and utilities can be relatively high.',
+  Czechia: 'Medium cost – Prague higher, regional cities more affordable.',
+  Denmark: 'High cost – one of Europe’s more expensive countries.',
+  Estonia: 'Medium cost – Tallinn higher, other regions more moderate.',
+  Finland: 'Medium to high cost – Helsinki area significantly higher.',
+  France: 'Medium to high cost – Paris high, regional cities more moderate.',
   Germany: 'Medium cost – many student cities with moderate rents.',
-  France: 'Medium to high cost – higher in Paris, more moderate in regional cities.',
-  Italy: 'Medium cost – northern cities higher, many affordable options in the centre and south.',
+  Greece: 'Medium cost – Athens and islands higher than inland areas.',
+  Hungary: 'Medium cost – Budapest higher, regional cities cheaper.',
+  Ireland: 'High cost – especially Dublin for rent and daily expenses.',
+  Italy:
+    'Medium cost – northern cities higher, many affordable options in central and southern regions.',
+  Latvia: 'Medium cost – Riga highest, other towns more affordable.',
+  Lithuania: 'Medium cost – Vilnius higher than smaller cities.',
+  Luxembourg: 'High cost – housing and services among highest in EU.',
+  Malta: 'Medium to high cost – limited housing supply drives rents.',
   Netherlands: 'Medium to high cost – housing pressure in major cities.',
-  Spain: 'Medium cost – some affordable regional cities.',
+  Poland: 'Medium cost – large cities moderate, smaller cities cheaper.',
+  Portugal:
+    'Medium cost – Lisbon and Porto higher, inland regions more affordable.',
+  Romania: 'Lower to medium cost – daily expenses comparatively low.',
+  Slovakia: 'Medium cost – Bratislava higher, other regions moderate.',
+  Slovenia: 'Medium cost – Ljubljana higher than regional towns.',
+  Spain: 'Medium cost – major cities and islands higher than inland areas.',
+  Sweden: 'Medium to high cost – Stockholm and Gothenburg most expensive.',
 };
 
 const defaultTopCountries = ['Germany', 'France', 'Italy'];
@@ -129,7 +175,46 @@ type CountryPathwayConfig = {
   notes?: string;
 };
 
+const commonEuFunding = [
+  'Erasmus+ mobility grants for vocational and higher education, usually arranged by your current or future institution.',
+  'European Solidarity Corps projects that offer volunteering or solidarity activities with an allowance.',
+];
+
+const makeGenericCountryConfig = (
+  countryName: string,
+  extraNotes?: string,
+): CountryPathwayConfig => ({
+  qualificationRoutes: [
+    `Upper-secondary general or vocational programmes leading to recognised school-leaving qualifications (around EQF 4) in ${countryName}.`,
+    `Initial and continuing vocational education and training in colleges, vocational schools or training centres, with routes in areas like technology, services, care and business.`,
+    'Progression routes into higher vocational programmes, universities of applied sciences or universities, depending on entry requirements.',
+  ],
+  accommodation: [
+    'Student residences or dormitories in major study cities (availability varies by region).',
+    'Private rented rooms or shared flats, often arranged via student platforms or local housing agencies.',
+    'Living with family or commuting from nearby towns where accommodation is more affordable.',
+  ],
+  workAndStudy: [
+    'Work-based learning or apprenticeship-style programmes in some vocational routes, combining company experience with classroom learning.',
+    'Part-time work options for students in sectors such as retail, hospitality, care, logistics or tourism, depending on local labour markets.',
+    'Internships or practical placements embedded in many vocational and higher-education programmes.',
+  ],
+  euFunding: [...commonEuFunding],
+  nationalFunding: [
+    `National or regional grants and scholarships for learners in recognised programmes in ${countryName}, often income-based.`,
+    'Student loans or income-contingent fee support for higher education in some systems.',
+    'Targeted incentives or grants in shortage occupations or priority sectors.',
+  ],
+  lowIncomeSupport: [
+    'Means-tested grants or bursaries for learners from low-income households.',
+    'Subsidies or discounts for accommodation, meals or public transport for eligible students.',
+    'Additional support for disabled learners, carers or other groups with specific needs.',
+  ],
+  notes: extraNotes,
+});
+
 const countryConfigs: Record<string, CountryPathwayConfig> = {
+  // Detailed configs
   Germany: {
     qualificationRoutes: [
       'Dual vocational training (Ausbildung) combining paid work in a company with 1–2 days per week in vocational school, usually 2–3.5 years (EQF 3–4).',
@@ -146,10 +231,7 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
       'Full-time students can usually take part-time jobs within visa or residence rules, especially in services, retail and hospitality.',
       'Some universities of applied sciences (Hochschulen / Fachhochschulen) offer dual bachelor programmes that combine work and study.',
     ],
-    euFunding: [
-      'Erasmus+ mobility grants for vocational education and training (VET) or higher education exchanges arranged through your home institution.',
-      'European Solidarity Corps opportunities for volunteering and solidarity projects with a monthly allowance.',
-    ],
+    euFunding: [...commonEuFunding],
     nationalFunding: [
       'BAföG (federal student support) for eligible learners in school, VET and higher education, based on residence status and financial need.',
       'Deutschlandstipendium and other merit- and need-based scholarships offered by universities and foundations.',
@@ -178,12 +260,9 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
     workAndStudy: [
       'Apprenticeship contracts (contrat d’apprentissage) that combine employment in a company with training in a CFA, with a monthly salary.',
       'Students on school-based programmes can often take part-time work within legal limits, especially in services and hospitality.',
-      'Sandwich or alternating routes (formation en alternance) at BTS, BUT and some degree levels.',
+      'Alternance routes (formation en alternance) at BTS, BUT and some degree levels, mixing work and study.',
     ],
-    euFunding: [
-      'Erasmus+ grants for VET and higher-education mobility, usually arranged between your current and host institutions.',
-      'European Solidarity Corps projects that can be based in France with an allowance and accommodation support.',
-    ],
+    euFunding: [...commonEuFunding],
     nationalFunding: [
       'CROUS need-based grants (bourses sur critères sociaux) for students in recognised programmes.',
       'Housing assistance (APL or other CAF benefits) to reduce rent costs, depending on income and status.',
@@ -214,10 +293,7 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
       'Part-time jobs in services, tourism and retail are common for students, depending on local labour markets.',
       'ITS Academy programmes often integrate internships or periods of structured work experience.',
     ],
-    euFunding: [
-      'Erasmus+ mobility for VET learners, ITS students and university students, often organised by the sending institution.',
-      'European Solidarity Corps opportunities that can add experience between or alongside studies.',
-    ],
+    euFunding: [...commonEuFunding],
     nationalFunding: [
       'Regional “diritto allo studio” grants that reduce or waive tuition fees and can contribute to housing and living costs.',
       'Fee reductions and instalment plans at public universities for lower-income families.',
@@ -248,10 +324,7 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
       'Full-time students can usually work part-time jobs in retail, hospitality, logistics and care sectors.',
       'Many hbo programmes include mandatory internships (stages) linked directly to the curriculum.',
     ],
-    euFunding: [
-      'Erasmus+ for mbo, hbo and university students, including traineeships abroad.',
-      'European Solidarity Corps projects within or outside the Netherlands.',
-    ],
+    euFunding: [...commonEuFunding],
     nationalFunding: [
       'Study finance (studiefinanciering) from DUO for eligible learners, which may include a basic grant, supplementary grant and student travel product.',
       'Tuition-fee loans for higher education learners, repayable under income-linked rules.',
@@ -282,10 +355,7 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
       'Part-time work alongside study is common in hospitality, retail and tourism, especially in larger cities.',
       'Some dual-vocational training schemes (FP dual) combine longer placements with company contracts.',
     ],
-    euFunding: [
-      'Erasmus+ for mobility periods during vocational or higher-education studies, organised by your school or university.',
-      'European Solidarity Corps placements, including youth projects within Spain.',
-    ],
+    euFunding: [...commonEuFunding],
     nationalFunding: [
       'State scholarships and grants (becas) from the Ministry of Education based on income, performance and programme level.',
       'Regional grants that top up national becas or target specific sectors and regions.',
@@ -299,40 +369,235 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
     notes:
       'Spain offers a wide range of vocational options with built-in work experience and a strong national scholarship system for low-income learners.',
   },
+
+  // Generic configs for the rest of EU-27
+  Austria: makeGenericCountryConfig(
+    'Austria',
+    'Austria has a strong dual vocational system and higher-education sector with low or moderate tuition fees at public institutions.',
+  ),
+  Belgium: makeGenericCountryConfig(
+    'Belgium',
+    'Belgium offers multiple language communities with their own higher-education systems and support schemes.',
+  ),
+  Bulgaria: makeGenericCountryConfig(
+    'Bulgaria',
+    'Bulgaria combines relatively low living costs with universities and vocational institutions in major cities such as Sofia and Plovdiv.',
+  ),
+  Croatia: makeGenericCountryConfig(
+    'Croatia',
+    'Croatia has growing vocational and higher-education options and is developing more work-based learning routes.',
+  ),
+  Cyprus: makeGenericCountryConfig(
+    'Cyprus',
+    'Cyprus offers programmes in Greek and English, with strong links to tourism, services and business sectors.',
+  ),
+  Czechia: makeGenericCountryConfig(
+    'Czechia',
+    'Czechia has a well-developed technical and engineering education tradition, with options in Czech and sometimes English.',
+  ),
+  Denmark: makeGenericCountryConfig(
+    'Denmark',
+    'Denmark emphasises applied learning and has strong student support, but living costs are relatively high.',
+  ),
+  Estonia: makeGenericCountryConfig(
+    'Estonia',
+    'Estonia has a growing digital and technology focus with many programmes linked to the IT sector.',
+  ),
+  Finland: makeGenericCountryConfig(
+    'Finland',
+    'Finland combines universities and universities of applied sciences with a focus on equality of access and high-quality teaching.',
+  ),
+  Greece: makeGenericCountryConfig(
+    'Greece',
+    'Greece offers universities and vocational institutes with routes linked to tourism, shipping, services and the public sector.',
+  ),
+  Hungary: makeGenericCountryConfig(
+    'Hungary',
+    'Hungary has technical universities and vocational programmes, with some English-taught options and relatively moderate living costs.',
+  ),
+  Ireland: makeGenericCountryConfig(
+    'Ireland',
+    'Ireland has a strong higher-education system and a growing technology and pharmaceutical sector, but housing costs can be high.',
+  ),
+  Latvia: makeGenericCountryConfig(
+    'Latvia',
+    'Latvia offers universities and colleges in Riga and regional centres, with growing options in business and technology.',
+  ),
+  Lithuania: makeGenericCountryConfig(
+    'Lithuania',
+    'Lithuania has universities and colleges with programmes in health, engineering, social sciences and IT, often at moderate cost.',
+  ),
+  Luxembourg: makeGenericCountryConfig(
+    'Luxembourg',
+    'Luxembourg is small but highly international, with strong finance, EU-institution and multilingual opportunities.',
+  ),
+  Malta: makeGenericCountryConfig(
+    'Malta',
+    'Malta offers programmes strongly connected to tourism, maritime services and digital industries in a small-island context.',
+  ),
+  Poland: makeGenericCountryConfig(
+    'Poland',
+    'Poland has a large network of universities and technical institutions with relatively moderate living costs in many cities.',
+  ),
+  Portugal: makeGenericCountryConfig(
+    'Portugal',
+    'Portugal offers universities and polytechnics with popular programmes in engineering, tourism, business and creative sectors.',
+  ),
+  Romania: makeGenericCountryConfig(
+    'Romania',
+    'Romania combines low to medium living costs with expanding higher-education and vocational options.',
+  ),
+  Slovakia: makeGenericCountryConfig(
+    'Slovakia',
+    'Slovakia has universities and vocational schools with routes feeding into automotive, engineering and services sectors.',
+  ),
+  Slovenia: makeGenericCountryConfig(
+    'Slovenia',
+    'Slovenia offers compact but high-quality systems with strong links to outdoor, tourism, engineering and business sectors.',
+  ),
+  Sweden: makeGenericCountryConfig(
+    'Sweden',
+    'Sweden focuses on student-centred learning, equality and sustainability, with many English-taught higher-education options.',
+  ),
 };
+
+const Pathways: React.FC = () => {
+  const [step, setStep] = useState<Step>('intro');
+
+  const [currentCountry, setCurrentCountry] = useState('');
+  const [currentEqfLevel, setCurrentEqfLevel] = useState('');
+  const [currentLevel, setCurrentLevel] = useState(''); // UK approximation, used only for comparison text
+
+  const [studyMode, setStudyMode] = useState('');
+  const [targetCountries, setTargetCountries] = useState<string[]>([]);
+  const [fundingProfile, setFundingProfile] = useState('');
+  const [supportFlags, setSupportFlags] = useState<string[]>([]);
+  const [accommodationPreferences, setAccommodationPreferences] = useState<string[]>([]);
+  const [costPreference, setCostPreference] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
+
+  const [progress, setProgress] = useState(0);
+
+  const effectiveTargetCountries = useMemo(() => {
+    if (targetCountries.length === 0 || targetCountries.includes('not-sure')) {
+      return defaultTopCountries;
+    }
+    return targetCountries;
+  }, [targetCountries]);
+
+  const totalSteps = activeSteps.length;
+
+  const getStepNumber = (currentStep: Step): number => {
+    const index = activeSteps.indexOf(currentStep);
+    return index === -1 ? 0 : index + 1;
+  };
+
+  const goToStep = (nextStep: Step) => {
+    setStep(nextStep);
+    const activeIndex = activeSteps.indexOf(nextStep);
+    if (activeIndex === -1) {
+      setProgress(0);
+    } else {
+      setProgress(((activeIndex + 1) / totalSteps) * 100);
+    }
+  };
+
+  const handleNextStep = () => {
+    const currentIndex = stepOrder.indexOf(step);
+    const nextStep = stepOrder[currentIndex + 1] ?? 'results';
+    goToStep(nextStep);
+  };
+
+  const handlePrevStep = () => {
+    const currentIndex = stepOrder.indexOf(step);
+    const prevStep = stepOrder[currentIndex - 1] ?? 'intro';
+    goToStep(prevStep);
+  };
+
+  const handleInterestToggle = (interest: string) => {
+    setInterests((prev) =>
+      prev.includes(interest) ? prev.filter((i) => i !== interest) : [...prev, interest],
+    );
+  };
+
+  const handleMultiToggle = (
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string[]>>,
+  ) => {
+    setter((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
+    );
+  };
+
+  const handleDownloadResults = () => {
+    const data = {
+      currentCountry,
+      currentEqfLevel: getEqfLabel(currentEqfLevel),
+      ukApproxLevel: currentLevel || mapEqfToUkLevelCode(currentEqfLevel),
+      studyMode,
+      targetCountries: effectiveTargetCountries,
+      fundingProfile,
+      supportFlags,
+      accommodationPreferences,
+      costPreference,
+      interests,
+    };
+
+    const blob = new Blob(
+      [
+        'Equitable Journeys – Pathway Summary\n\n',
+        JSON.stringify(data, null, 2),
+      ],
+      { type: 'text/plain;charset=utf-8' },
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'equitable-journeys-pathway-summary.txt';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <MainLayout>
-      <section className="py-12 bg-gray-50">
+      <section className="bg-gray-50 py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold mb-4 text-center">Career Pathway Finder</h1>
-            <p className="text-center text-gray-600 mb-8">
-              Discover educational pathways that align with your career goals and interests.
+          <div className="mx-auto max-w-4xl">
+            <h1 className="mb-4 text-center text-4xl font-bold">
+              Career Pathway Finder
+            </h1>
+            <p className="mb-8 text-center text-gray-600">
+              Discover educational pathways that align with your goals and qualifications
+              across the UK and Europe.
             </p>
 
-            {/* AI Tools Section */}
-            <div className="grid md:grid-cols-2 gap-6 mb-10">
-              <Card className="border-primary/20 hover:shadow-lg transition-shadow">
+            {/* AI Tools section */}
+            <div className="mb-10 grid gap-6 md:grid-cols-2">
+              <Card className="border-primary/20 transition-shadow hover:shadow-lg">
                 <CardContent className="p-6 text-center">
-                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                     <Lightbulb className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Career Compass Pro</h3>
-                  <p className="text-gray-600 mb-4">Get personalized career guidance from our AI chatbot expert</p>
+                  <h3 className="mb-2 text-xl font-bold">Career Compass Pro</h3>
+                  <p className="mb-4 text-gray-600">
+                    Get personalised career guidance from our AI chatbot expert.
+                  </p>
                   <Button asChild className="w-full">
                     <Link to="/tools/career-compass">Open in-site view</Link>
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-accent/20 hover:shadow-lg transition-shadow">
+              <Card className="border-accent/20 transition-shadow hover:shadow-lg">
                 <CardContent className="p-6 text-center">
-                  <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
                     <GraduationCap className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Einstein Learning</h3>
-                  <p className="text-gray-600 mb-4">AI-powered learning assistant to help with your studies</p>
+                  <h3 className="mb-2 text-xl font-bold">Einstein Learning</h3>
+                  <p className="mb-4 text-gray-600">
+                    AI-powered learning assistant to help with your studies.
+                  </p>
                   <Button asChild variant="secondary" className="w-full">
                     <Link to="/tools/einstein-learning">Open in-site view</Link>
                   </Button>
@@ -341,328 +606,680 @@ const countryConfigs: Record<string, CountryPathwayConfig> = {
             </div>
 
             <Separator className="mb-8" />
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold mb-2">Or Use Our Interactive Pathway Tool</h2>
-              <p className="text-gray-600">Complete our step-by-step questionnaire for detailed recommendations</p>
+
+            <div className="mb-8 text-center">
+              <h2 className="mb-2 text-2xl font-bold">
+                Or Use Our Interactive Pathway Tool
+              </h2>
+              <p className="text-gray-600">
+                Complete our step-by-step questionnaire for detailed recommendations.
+              </p>
             </div>
 
             {step !== 'intro' && step !== 'results' && (
               <div className="mb-10">
-                <Progress value={progress} className="h-2 mb-2" />
-                <div className="text-sm text-gray-500 text-right">Step {getStepNumber(step)} of 3</div>
+                <Progress value={progress} className="mb-2 h-2" />
+                <div className="text-right text-sm text-gray-500">
+                  Step {getStepNumber(step)} of {totalSteps}
+                </div>
               </div>
             )}
 
             <Card className="border shadow-lg">
+              {/* INTRO */}
               {step === 'intro' && (
                 <CardContent className="p-8">
-                  <div className="text-center space-y-6">
-                    <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+                  <div className="space-y-6 text-center">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
                       <Route className="h-10 w-10 text-primary" />
                     </div>
                     <h2 className="text-2xl font-bold">Find Your Educational Journey</h2>
                     <p className="text-gray-600">
-                      This tool helps you discover suitable educational pathways based on your current qualifications, career goals, and interests. Answer a few questions to get personalized recommendations.
+                      This tool helps you explore pathways based on your current
+                      qualifications, how you want to study, and where in Europe you would
+                      like to learn.
                     </p>
                     <div className="pt-4">
-                      <Button size="lg" onClick={handleNextStep}>Start Exploring</Button>
+                      <Button size="lg" onClick={() => goToStep('currentCountry')}>
+                        Start Exploring
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
               )}
 
-              {step === 'current' && (
+              {/* Q1 – CURRENT COUNTRY */}
+              {step === 'currentCountry' && (
                 <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold mb-6">What's your current qualification level?</h2>
-                  <div className="space-y-6">
-                    <p className="text-gray-600">
-                      Select the highest level of qualification you currently hold.
-                    </p>
-                    <RadioGroup value={currentLevel} onValueChange={setCurrentLevel}>
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="none" id="none" />
-                          <Label htmlFor="none">No formal qualifications</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="entry" id="entry" />
-                          <Label htmlFor="entry">Entry level qualifications</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="1-2" id="1-2" />
-                          <Label htmlFor="1-2">Level 1-2 (GCSEs, O Levels)</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="3" id="3" />
-                          <Label htmlFor="3">Level 3 (A Levels, BTEC Nationals)</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="4-5" id="4-5" />
-                          <Label htmlFor="4-5">Level 4-5 (HNC, HND, Foundation Degree)</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="6" id="6" />
-                          <Label htmlFor="6">Level 6 (Bachelor's Degree)</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="7" id="7" />
-                          <Label htmlFor="7">Level 7 (Master's Degree)</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="8" id="8" />
-                          <Label htmlFor="8">Level 8 (Doctorate)</Label>
-                        </div>
+                  <h2 className="mb-2 text-2xl font-bold">
+                    Where are you currently living or studying?
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    This helps us match you with routes and support in your country, or in
+                    other European countries.
+                  </p>
+                  <RadioGroup
+                    value={currentCountry}
+                    onValueChange={setCurrentCountry}
+                    className="grid gap-3 md:grid-cols-2"
+                  >
+                    {ALL_COUNTRIES.map((country) => (
+                      <div
+                        key={country}
+                        className="flex items-center space-x-3 rounded-lg border p-3"
+                      >
+                        <RadioGroupItem value={country} id={`country-${country}`} />
+                        <Label htmlFor={`country-${country}`}>{country}</Label>
                       </div>
-                    </RadioGroup>
-                    <div className="pt-6 flex justify-between">
-                      <Button variant="outline" onClick={handlePrevStep}>
-                        <ChevronLeft className="mr-2 h-4 w-4" /> Back
-                      </Button>
-                      <Button onClick={handleNextStep} disabled={!currentLevel}>
-                        Continue <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
+                    ))}
+                  </RadioGroup>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleNextStep} disabled={!currentCountry}>
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
                 </CardContent>
               )}
 
-              {step === 'goals' && (
+              {/* Q2 – CURRENT LEVEL (EQF) */}
+              {step === 'currentLevel' && (
                 <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold mb-6">What are your career goals?</h2>
-                  <div className="space-y-6">
-                    <p className="text-gray-600">
-                      Choose the option that best describes your primary career goal.
-                    </p>
-                    <RadioGroup value={goal} onValueChange={setGoal}>
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="enter" id="enter" />
-                          <Label htmlFor="enter">Enter a new career field</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="advance" id="advance" />
-                          <Label htmlFor="advance">Advance in my current career</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="specialized" id="specialized" />
-                          <Label htmlFor="specialized">Gain specialized knowledge/skills</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="entrepreneurship" id="entrepreneurship" />
-                          <Label htmlFor="entrepreneurship">Start my own business/organization</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="academic" id="academic" />
-                          <Label htmlFor="academic">Pursue academic/research career</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="public" id="public" />
-                          <Label htmlFor="public">Work in public service/government</Label>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                    <div className="pt-6 flex justify-between">
-                      <Button variant="outline" onClick={handlePrevStep}>
-                        <ChevronLeft className="mr-2 h-4 w-4" /> Back
-                      </Button>
-                      <Button onClick={handleNextStep} disabled={!goal}>
-                        Continue <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
+                  <h2 className="mb-2 text-2xl font-bold">
+                    What is your current qualification level?
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    Choose the option that best matches your highest completed level,
+                    using the European Qualifications Framework (EQF).
+                  </p>
+                  <RadioGroup
+                    value={currentEqfLevel}
+                    onValueChange={(value) => {
+                      setCurrentEqfLevel(value);
+                      setCurrentLevel(mapEqfToUkLevelCode(value));
+                    }}
+                    className="space-y-3"
+                  >
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="below2" id="eqf-below2" />
+                      <Label htmlFor="eqf-below2" className="flex flex-col">
+                        <span className="font-medium">No formal qualifications yet</span>
+                        <span className="text-sm text-gray-600">
+                          Below EQF 2 – you may be starting from scratch or returning to
+                          learning.
+                        </span>
+                      </Label>
                     </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf2-3" id="eqf2-3" />
+                      <Label htmlFor="eqf2-3" className="flex flex-col">
+                        <span className="font-medium">
+                          Completed basic / lower-secondary education
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          EQF 2–3 – typically completion of compulsory schooling.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf4" id="eqf4" />
+                      <Label htmlFor="eqf4" className="flex flex-col">
+                        <span className="font-medium">
+                          Completed upper-secondary qualification
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          EQF 4 – general or vocational school-leaving certificate.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf5" id="eqf5" />
+                      <Label htmlFor="eqf5" className="flex flex-col">
+                        <span className="font-medium">
+                          Short-cycle higher / post-secondary vocational
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          EQF 5 – higher vocational diplomas, short-cycle tertiary.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf6" id="eqf6" />
+                      <Label htmlFor="eqf6" className="flex flex-col">
+                        <span className="font-medium">Bachelor level or equivalent</span>
+                        <span className="text-sm text-gray-600">
+                          EQF 6 – first cycle higher education.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf7" id="eqf7" />
+                      <Label htmlFor="eqf7" className="flex flex-col">
+                        <span className="font-medium">Master level or equivalent</span>
+                        <span className="text-sm text-gray-600">
+                          EQF 7 – second cycle higher education.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="eqf8" id="eqf8" />
+                      <Label htmlFor="eqf8" className="flex flex-col">
+                        <span className="font-medium">Doctorate level</span>
+                        <span className="text-sm text-gray-600">
+                          EQF 8 – doctoral or equivalent level.
+                        </span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  <p className="mt-4 text-xs text-gray-500">
+                    In your results we will also show the approximate UK level for easy
+                    comparison.
+                  </p>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleNextStep} disabled={!currentEqfLevel}>
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
                 </CardContent>
               )}
 
+              {/* Q3 – STUDY MODE */}
+              {step === 'studyMode' && (
+                <CardContent className="p-8">
+                  <h2 className="mb-2 text-2xl font-bold">
+                    How do you want to study?
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    Choose the option that best matches the way you would like to learn in
+                    your next step.
+                  </p>
+                  <RadioGroup
+                    value={studyMode}
+                    onValueChange={setStudyMode}
+                    className="space-y-3"
+                  >
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="full-time-campus" id="full-time-campus" />
+                      <Label htmlFor="full-time-campus" className="flex flex-col">
+                        <span className="font-medium">Full-time on campus</span>
+                        <span className="text-sm text-gray-600">
+                          Most of your week is focused on in-person study.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="part-time" id="part-time" />
+                      <Label htmlFor="part-time" className="flex flex-col">
+                        <span className="font-medium">Part-time or flexible</span>
+                        <span className="text-sm text-gray-600">
+                          You want to combine study with other responsibilities.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="online" id="online" />
+                      <Label htmlFor="online" className="flex flex-col">
+                        <span className="font-medium">Online / distance learning</span>
+                        <span className="text-sm text-gray-600">
+                          Mostly online, with flexibility on location.
+                        </span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 rounded-lg border p-3">
+                      <RadioGroupItem value="apprenticeship" id="apprenticeship" />
+                      <Label htmlFor="apprenticeship" className="flex flex-col">
+                        <span className="font-medium">
+                          Apprenticeship / dual learning (where available)
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          A paid work contract combined with structured training.
+                        </span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleNextStep} disabled={!studyMode}>
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              )}
+
+              {/* Q4 – TARGET COUNTRIES / MOBILITY */}
+              {step === 'mobility' && (
+                <CardContent className="p-8">
+                  <h2 className="mb-2 text-2xl font-bold">
+                    Which country or countries are you interested in?
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    You can choose one or several European countries. If you are not sure,
+                    we can highlight a few strong options.
+                  </p>
+
+                  <div className="mb-4 grid gap-2 md:grid-cols-2">
+                    {ALL_COUNTRIES.map((country) => (
+                      <button
+                        key={country}
+                        type="button"
+                        onClick={() => handleMultiToggle(country, setTargetCountries)}
+                        className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                          targetCountries.includes(country)
+                            ? 'border-primary bg-primary/5'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        {country}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handleMultiToggle('not-sure', setTargetCountries)}
+                      className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                        targetCountries.includes('not-sure')
+                          ? 'border-primary bg-primary/5'
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      Not sure – show me a few good options
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gray-500">
+                    If you do not choose a country, we will show example pathways in
+                    Germany, France and Italy and explain why they are useful benchmarks.
+                  </p>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleNextStep}>
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              )}
+
+              {/* Q5 & Q6 – FINANCE, SUPPORT, ACCOMMODATION & COST */}
+              {step === 'finance' && (
+                <CardContent className="p-8">
+                  <h2 className="mb-2 text-2xl font-bold">
+                    Funding, support and living situation
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    Tell us how you expect to pay for your studies and where you might
+                    live. We will highlight relevant grants, support and cost-of-living
+                    information.
+                  </p>
+
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="mb-2 text-lg font-semibold">
+                        How will you fund your studies?
+                      </h3>
+                      <RadioGroup
+                        value={fundingProfile}
+                        onValueChange={setFundingProfile}
+                        className="space-y-3"
+                      >
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="self-funding" id="self-funding" />
+                          <Label htmlFor="self-funding" className="flex flex-col">
+                            <span className="font-medium">
+                              Mostly self-funding (savings or family support)
+                            </span>
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="grants" id="grants" />
+                          <Label htmlFor="grants" className="flex flex-col">
+                            <span className="font-medium">
+                              I will need significant grants or scholarships
+                            </span>
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="work-and-study" id="work-and-study" />
+                          <Label htmlFor="work-and-study" className="flex flex-col">
+                            <span className="font-medium">
+                              I need to combine work and study to afford it
+                            </span>
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="already-working" id="already-working" />
+                          <Label htmlFor="already-working" className="flex flex-col">
+                            <span className="font-medium">
+                              I am already working and want to study alongside my job
+                            </span>
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-lg font-semibold">
+                        Do any of these apply to you?
+                      </h3>
+                      <div className="grid gap-2 md:grid-cols-2">
+                        {[
+                          'Low household income or financial hardship',
+                          'Parent or carer responsibilities',
+                          'Disabled or long-term health condition',
+                          'Refugee, migrant or displaced background',
+                          'First in family to enter higher education',
+                          'None of these',
+                        ].map((flag) => (
+                          <button
+                            key={flag}
+                            type="button"
+                            onClick={() => handleMultiToggle(flag, setSupportFlags)}
+                            className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                              supportFlags.includes(flag)
+                                ? 'border-primary bg-primary/5'
+                                : 'hover:bg-gray-50'
+                            }`}
+                          >
+                            {flag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-lg font-semibold">
+                        Where would you prefer to live while studying?
+                      </h3>
+                      <div className="grid gap-2 md:grid-cols-2">
+                        {[
+                          'On-site student accommodation (halls or residence)',
+                          'Private rented room or shared flat',
+                          'Living with family or friends',
+                          'I don’t know yet',
+                        ].map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() =>
+                              handleMultiToggle(item, setAccommodationPreferences)
+                            }
+                            className={`rounded-lg border px-3 py-2 text-left text-sm ${
+                              accommodationPreferences.includes(item)
+                                ? 'border-primary bg-primary/5'
+                                : 'hover:bg-gray-50'
+                            }`}
+                          >
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="mb-2 text-lg font-semibold">
+                        Cost-of-living preference
+                      </h3>
+                      <RadioGroup
+                        value={costPreference}
+                        onValueChange={setCostPreference}
+                        className="space-y-3"
+                      >
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="lower-cost" id="lower-cost" />
+                          <Label htmlFor="lower-cost" className="flex flex-col">
+                            <span className="font-medium">
+                              Lower-cost regions, even if there are fewer options
+                            </span>
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="balanced" id="balanced" />
+                          <Label htmlFor="balanced" className="flex flex-col">
+                            <span className="font-medium">
+                              Balanced cost and range of options
+                            </span>
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3 rounded-lg border p-3">
+                          <RadioGroupItem value="high-opportunity" id="high-opportunity" />
+                          <Label htmlFor="high-opportunity" className="flex flex-col">
+                            <span className="font-medium">
+                              High-opportunity cities, even if costs are higher
+                            </span>
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button
+                      onClick={handleNextStep}
+                      disabled={!fundingProfile || !costPreference}
+                    >
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              )}
+
+              {/* Q6 – SECTOR INTERESTS */}
               {step === 'interests' && (
                 <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold mb-6">What sectors are you interested in?</h2>
-                  <div className="space-y-6">
-                    <p className="text-gray-600">
-                      Select all sectors that interest you (choose at least one).
-                    </p>
-                    <div className="grid grid-cols-2 gap-3">
-                      {sectorOptions.map((sector) => (
-                        <div
-                          key={sector}
-                          className={`border rounded-md p-3 cursor-pointer transition-colors ${
-                            interests.includes(sector)
-                              ? 'bg-primary/10 border-primary'
-                              : 'hover:bg-gray-50'
-                          }`}
-                          onClick={() => handleInterestToggle(sector)}
-                        >
-                          <div className="font-medium">{sector}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="pt-6 flex justify-between">
-                      <Button variant="outline" onClick={handlePrevStep}>
-                        <ChevronLeft className="mr-2 h-4 w-4" /> Back
-                      </Button>
-                      <Button onClick={handleNextStep} disabled={interests.length === 0}>
-                        See Results <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
+                  <h2 className="mb-2 text-2xl font-bold">
+                    What sectors are you interested in?
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    Select all sectors that interest you. We will use this to highlight
+                    relevant routes in each country.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {sectorOptions.map((sector) => (
+                      <button
+                        key={sector}
+                        type="button"
+                        onClick={() => handleInterestToggle(sector)}
+                        className={`rounded-md border p-3 text-left transition-colors ${
+                          interests.includes(sector)
+                            ? 'border-primary bg-primary/10'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">{sector}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button variant="outline" onClick={handlePrevStep}>
+                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button
+                      onClick={handleNextStep}
+                      disabled={interests.length === 0}
+                    >
+                      See Results
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
                 </CardContent>
               )}
 
+              {/* RESULTS */}
               {step === 'results' && (
                 <CardContent className="p-8">
-                  <div className="text-center mb-8">
-                    <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+                  <div className="mb-8 text-center">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
                       <GraduationCap className="h-10 w-10 text-green-600" />
                     </div>
-                    <h2 className="text-2xl font-bold mt-4">Your Recommended Pathways</h2>
-                    <p className="text-gray-600 mt-2">
-                      Based on your current level ({currentLevel}), goals, and interests, here are some educational pathways to consider.
+                    <h2 className="mt-4 text-2xl font-bold">
+                      Your Recommended Pathways
+                    </h2>
+                    <p className="mt-2 text-gray-600">
+                      Based on your current level (
+                      {getEqfLabel(currentEqfLevel) || 'not specified yet'}) – roughly UK
+                      level {currentLevel || mapEqfToUkLevelCode(currentEqfLevel)} – your
+                      study preferences and interests, here are some routes to explore.
                     </p>
+                    {targetCountries.includes('not-sure') ||
+                      targetCountries.length === 0 ? (
+                      <p className="mt-2 text-xs text-gray-500">
+                        You were not sure which country to choose, so we have highlighted
+                        Germany, France and Italy as strong examples with clear vocational
+                        and higher-education routes.
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="space-y-6">
-                    {/* First recommendation */}
-                    <Card className="border-primary/20">
-                      <CardHeader className="bg-primary/5 pb-3">
-                        <CardTitle>Primary Recommendation</CardTitle>
-                        <CardDescription>Best match for your profile</CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <h3 className="text-xl font-semibold mb-2">
-                          {goal === 'academic' 
-                            ? 'Research-Focused Advanced Degree' 
-                            : goal === 'public' 
-                              ? 'Public Service Qualification Pathway'
-                              : 'Professional Development Track'}
-                        </h3>
-                        <div className="space-y-4">
-                          <p>
-                            {goal === 'academic' 
-                              ? 'This pathway focuses on building your research capabilities and academic expertise.'
-                              : goal === 'public'
-                                ? 'This pathway prepares you for roles in government, NGOs, and public service.'
-                                : 'This pathway builds on your current qualifications to advance your professional skills.'}
-                          </p>
-                          <div>
-                            <h4 className="font-semibold">Recommended Next Steps:</h4>
-                            <ul className="list-disc pl-5 mt-2 space-y-1">
-                              {currentLevel === 'none' || currentLevel === 'entry' ? (
-                                <>
-                                  <li>Level 1-2 qualifications in your area of interest</li>
-                                  <li>Functional skills qualifications</li>
-                                  <li>Vocational training certificates</li>
-                                </>
-                              ) : currentLevel === '1-2' ? (
-                                <>
-                                  <li>Level 3 qualification (A Levels or BTEC National)</li>
-                                  <li>Advanced apprenticeship</li>
-                                  <li>Access to Higher Education Diploma</li>
-                                </>
-                              ) : currentLevel === '3' ? (
-                                <>
-                                  <li>Foundation degree or HND (Level 5)</li>
-                                  <li>Higher apprenticeship</li>
-                                  <li>Professional certifications</li>
-                                </>
-                              ) : currentLevel === '4-5' ? (
-                                <>
-                                  <li>Top-up to full Bachelor's degree (Level 6)</li>
-                                  <li>Professional body memberships</li>
-                                  <li>Specialized diplomas</li>
-                                </>
-                              ) : currentLevel === '6' ? (
-                                <>
-                                  <li>Master's degree (Level 7)</li>
-                                  <li>Postgraduate certificates</li>
-                                  <li>Professional examinations</li>
-                                </>
-                              ) : currentLevel === '7' ? (
-                                <>
-                                  <li>Doctorate or PhD (Level 8)</li>
-                                  <li>Research fellowships</li>
-                                  <li>Executive education</li>
-                                </>
-                              ) : (
-                                <>
-                                  <li>Post-doctoral research</li>
-                                  <li>Professional leadership qualifications</li>
-                                  <li>Specialized certifications</li>
-                                </>
-                              )}
-                            </ul>
-                          </div>
-                          <div className="pt-2">
-                            <h4 className="font-semibold">Potential Institutions:</h4>
-                            <ul className="list-disc pl-5 mt-2 space-y-1">
-                              {interests.includes('Healthcare') && (
-                                <li>Health Education England accredited courses</li>
-                              )}
-                              {interests.includes('Education') && (
-                                <li>Teaching qualification providers</li>
-                              )}
-                              {interests.includes('Technology') && (
-                                <li>Technical certification bodies</li>
-                              )}
-                              {interests.includes('Government') && (
-                                <li>Civil Service Learning</li>
-                              )}
-                              <li>UK universities with relevant programs</li>
-                              <li>Accredited online learning platforms</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    {effectiveTargetCountries.map((country) => {
+                      const config = countryConfigs[country];
 
-                    {/* Alternative pathway */}
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle>Alternative Pathway</CardTitle>
-                        <CardDescription>Another option to consider</CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <h3 className="text-xl font-semibold mb-2">
-                          {goal === 'entrepreneurship' 
-                            ? 'Entrepreneurship & Innovation Track' 
-                            : 'Specialized Skills Development'}
-                        </h3>
-                        <div className="space-y-4">
-                          <p>
-                            {goal === 'entrepreneurship'
-                              ? 'This pathway helps you develop the skills needed to start and run your own ventures.'
-                              : 'This pathway focuses on developing specialized skills in your field of interest.'}
-                          </p>
-                          <div>
-                            <h4 className="font-semibold">Key Components:</h4>
-                            <ul className="list-disc pl-5 mt-2 space-y-1">
-                              <li>Short, focused courses and certifications</li>
-                              <li>Professional body memberships</li>
-                              <li>Mentorship and networking opportunities</li>
-                              <li>Industry-specific qualifications</li>
-                            </ul>
+                      return (
+                        <div
+                          key={country}
+                          className="space-y-3 rounded-lg border bg-muted/30 p-4"
+                        >
+                          <div className="flex items-center gap-2">
+                            <GraduationCap className="h-4 w-4 text-primary" />
+                            <h3 className="text-lg font-semibold">
+                              Study pathways in {country}
+                            </h3>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
 
-                    {/* Tips section */}
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
+                          {config ? (
+                            <div className="space-y-3 text-sm">
+                              <div>
+                                <p className="font-medium">Qualification routes</p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.qualificationRoutes.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <p className="font-medium">Accommodation options</p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.accommodation.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <p className="font-medium">Work and study</p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.workAndStudy.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <p className="font-medium">
+                                  EU-level funding & opportunities
+                                </p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.euFunding.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <p className="font-medium">National funding & grants</p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.nationalFunding.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div>
+                                <p className="font-medium">
+                                  Support for low-income learners
+                                </p>
+                                <ul className="ml-5 list-disc space-y-1">
+                                  {config.lowIncomeSupport.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              {costOfLivingHints[country] && (
+                                <p className="text-xs text-gray-500">
+                                  Cost-of-living hint: {costOfLivingHints[country]}
+                                </p>
+                              )}
+
+                              {config.notes && (
+                                <p className="text-xs text-gray-500">
+                                  Note: {config.notes}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-600">
+                              We are still adding detailed information for this country.
+                              You can use the EU-wide guidance and funding options while
+                              this is being expanded.
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    <div className="flex gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
                       <div className="flex-shrink-0">
-                        <Lightbulb className="h-6 w-6 text-amber-500" />
+                        <Lightbulb className="h-5 w-5" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-amber-800">Helpful Tips</h3>
-                        <p className="text-amber-700 text-sm mt-1">
-                          Research funding options such as scholarships, grants, and student loans. Many institutions offer financial support, especially for students from underrepresented backgrounds.
+                        <h3 className="font-semibold">Helpful tips</h3>
+                        <p className="mt-1">
+                          Check national education and funding portals in each country for
+                          up-to-date information on grants, reduced fees and support for
+                          learners from low-income households. Many providers also have
+                          student support teams who can help you understand your options.
                         </p>
                       </div>
                     </div>
 
-                    <div className="pt-6 flex justify-between">
+                    <div className="mt-6 flex justify-between">
                       <Button variant="outline" onClick={handlePrevStep}>
-                        <ChevronLeft className="mr-2 h-4 w-4" /> Back
+                        <ChevronLeft className="mr-2 h-4 w-4" />
+                        Back
                       </Button>
-                      <Button>
+                      <Button onClick={handleDownloadResults}>
                         Save Results
+                        <ChevronRight className="ml-2 h-4 w-4" />
                       </Button>
                     </div>
                   </div>
