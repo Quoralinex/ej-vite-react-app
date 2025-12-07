@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, BookOpen, GraduationCap, BarChart, Route } from 'lucide-react';
+import { ArrowRight, BookOpen, GraduationCap, Route } from 'lucide-react';
 import MainLayout from '@/layouts/MainLayout';
 
 const Index = () => {
