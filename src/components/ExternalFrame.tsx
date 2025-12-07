@@ -29,7 +29,7 @@ const ExternalFrame = ({ title, url, description }: ExternalFrameProps) => {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (e) {
+    } catch {
       // ignore
     }
   };
