@@ -1,2 +1,4 @@
-export const toast = (..._args: unknown[]) => {};
+export const toast = (...args: unknown[]) => {
+  void args
+};
 export const Toaster = () => null;

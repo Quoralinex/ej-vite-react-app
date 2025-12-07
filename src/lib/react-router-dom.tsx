@@ -63,7 +63,11 @@ export const Routes = ({ children }: { children: ReactNode }) => {
         return matched && typeof matched === "object" ? (matched as ReactElement).props.element : null;
 };
 
-export const Route = (_: { path: string; element: ReactElement }) => null;
+export const Route = ({ path, element }: { path: string; element: ReactElement }) => {
+        void path;
+        void element;
+        return null;
+};
 
 export const Link = ({ to, children, ...props }: { to: string; children: ReactNode } & AnchorHTMLAttributes<HTMLAnchorElement>) => {
         const context = useContext(RouterContext);
