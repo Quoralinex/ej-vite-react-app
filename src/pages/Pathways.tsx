@@ -621,8 +621,6 @@ const Pathways: React.FC = () => {
   URL.revokeObjectURL(url);
 };
 
-  };
-
   return (
     <MainLayout>
       <section className="bg-gray-50 py-12">
