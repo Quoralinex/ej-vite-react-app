@@ -76,6 +76,12 @@ Deploy your project to Cloudflare Workers:
 npm run build && npm run deploy
 ```
 
+Validate your deployment configuration locally (type checks, production build, and a dry-run deploy) with:
+
+```bash
+npm run check
+```
+
 Monitor your workers:
 
 ```bash
