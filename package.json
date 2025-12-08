@@ -2,6 +2,7 @@
   "name": "ej-vite-react-app",
   "description": "A template for building a React application with Vite, Hono, and Cloudflare Workers",
   "private": true,
+  "packageManager": "npm@10.9.2",
   "cloudflare": {
     "label": "Vite React Template",
     "products": [
