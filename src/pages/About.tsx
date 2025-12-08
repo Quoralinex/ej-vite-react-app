@@ -3,7 +3,7 @@ import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { Heart, Globe, Building, BookOpen, Users, BarChart } from 'lucide-react';
+import { Heart, Globe, BookOpen, Users, BarChart } from 'lucide-react';
 
 const About = () => {
   return (
